@@ -2,6 +2,7 @@
 import {RouterLink} from 'vue-router'
 import {useUserStore} from "@/stores/user";
 import axios from "axios";
+import router from "@/router";
 
 const userStore = useUserStore();
 
@@ -10,6 +11,7 @@ async function onLogout() {
     await axios.post("/logout");
 
     userStore.$reset();
+    router.go();
 }
 </script>
 
