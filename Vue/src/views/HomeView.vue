@@ -2,8 +2,6 @@
 import {ref} from "vue";
 import axios from "axios";
 
-axios.defaults.withCredentials = true;
-
 const form = ref({
     email: null,
     password: null
@@ -13,16 +11,16 @@ const user = ref();
 
 async function onLogin() {
     console.log('cookie');
-    await axios.get("http://localhost:8000/sanctum/csrf-cookie");
+    await axios.get("/sanctum/csrf-cookie");
 
     console.log('post form');
-    await axios.post("http://localhost:8000/login", {
+    await axios.post("/login", {
         email: form.value.email,
         password: form.value.password
     });
 
     console.log('get user');
-    let {data} = await axios.get("http://localhost:8000/api/user");
+    let {data} = await axios.get("/api/user");
     user.value = data;
 }
 </script>
