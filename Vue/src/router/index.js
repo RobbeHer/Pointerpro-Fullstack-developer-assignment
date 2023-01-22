@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, RouterView } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import {useUserStore} from "@/stores/user";
 
@@ -16,8 +16,18 @@ const router = createRouter({
     },{
       path: '/dashboard',
       name: 'dashboard',
-      component: () => import('../views/Dashboard.vue'),
-      meta: { requiresAuth: true }
+      component: () => import('../views/admin/Dashboard.vue'),
+      meta: { requiresAuth: true },
+    },{
+      path: '/dashboard/products/create',
+      name: 'dashboard_products_create',
+      component: () => import('../views/admin/product/Create.vue'),
+      meta: { requiresAuth: true },
+    },{
+      path: '/dashboard/products/edit/:id',
+      name: 'dashboard_products_edit',
+      component: () => import('../views/admin/product/Edit.vue'),
+      meta: { requiresAuth: true },
     }
   ]
 })

@@ -1,10 +1,10 @@
 <script setup>
-import {RouterLink} from 'vue-router'
+import {RouterLink, useRouter} from 'vue-router'
 import {useUserStore} from "@/stores/user";
 import axios from "axios";
-import router from "@/router";
 
 const userStore = useUserStore();
+const router = useRouter();
 
 async function onLogout() {
     await axios.get("/sanctum/csrf-cookie");
@@ -17,13 +17,14 @@ async function onLogout() {
 
 <template>
     <nav>
-        <RouterLink to="/">Home</RouterLink>
+        <RouterLink :to="{ name: 'home' }">Home</RouterLink>
+
 
         <span v-if="userStore.getUser">
-            <RouterLink to="/dashboard">Dashboard</RouterLink>
+            <RouterLink :to="{ name: 'dashboard' }">Dashboard</RouterLink>
             {{ userStore.getUser.name }}
             <button @click="onLogout">Logout</button>
         </span>
-        <RouterLink v-else to="/login">Login</RouterLink>
+        <RouterLink v-else :to="{ name: 'login' }">Login</RouterLink>
     </nav>
 </template>

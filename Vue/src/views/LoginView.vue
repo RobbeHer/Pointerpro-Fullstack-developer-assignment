@@ -2,9 +2,11 @@
 import {ref} from "vue";
 import axios from "axios";
 import {useUserStore} from "@/stores/user";
-import router from "@/router";
+import {useRouter} from "vue-router";
 
 const userStore = useUserStore();
+const router = useRouter();
+
 const form = ref({
     email: null,
     password: null
@@ -17,10 +19,11 @@ async function onLogin() {
         password: form.value.password
     });
 
-    let {data} = await axios.get("/api/user");
-    userStore.setUser(data);
+    axios.get("/api/user").then((response) => {
+        userStore.setUser(response.data);
 
-    router.push({ name: 'dashboard' })
+        router.push({ name: 'dashboard' });
+    });
 }
 </script>
 
