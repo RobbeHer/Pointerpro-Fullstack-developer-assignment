@@ -15,4 +15,9 @@ class Product extends Model
         'price',
         'stock',
     ];
+
+    public function purchases()
+    {
+        return $this->belongsToMany(Purchase::class, 'purchases_products', 'product_id', 'purchase_id');
+    }
 }

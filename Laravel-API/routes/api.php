@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PurchaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,3 +30,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::apiResource('products', ProductController::class, ['only' => ['index', 'show']]);
+
+Route::post('purchase', [PurchaseController::class, 'store']);
