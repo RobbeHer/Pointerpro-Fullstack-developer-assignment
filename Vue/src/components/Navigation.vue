@@ -1,15 +1,14 @@
 <script setup>
-import {RouterLink, useRouter} from 'vue-router'
+import {useRouter} from 'vue-router';
 import {useUserStore} from "@/stores/user";
-import axios from "axios";
+import RepositoryFactory from "@/repositories/RepositoryFactory";
 
-const userStore = useUserStore();
 const router = useRouter();
+const userStore = useUserStore();
+const UserRepository = RepositoryFactory.get('user');
 
 async function onLogout() {
-    await axios.get("/sanctum/csrf-cookie");
-    await axios.post("/logout");
-
+    await UserRepository.logout();
     userStore.$reset();
     router.go();
 }

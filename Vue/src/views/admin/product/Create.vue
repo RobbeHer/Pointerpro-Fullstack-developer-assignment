@@ -1,21 +1,19 @@
 <script setup>
-import axios from "axios";
-import {useProductStore} from "@/stores/product";
 import {useRouter} from "vue-router";
 import {computed, onUnmounted} from "vue";
+import {useProductStore} from "@/stores/product";
+import RepositoryFactory from "@/repositories/RepositoryFactory";
 
-const productStore = useProductStore();
 const router = useRouter();
+const productStore = useProductStore();
+const ProductRepository = RepositoryFactory.getAdmin('products');
 
 const form = computed(() => productStore.getProductResource);
 
 async function onSave() {
-    await axios.get("/sanctum/csrf-cookie");
-    axios.post("/api/admin/products", form.value).then((response) => {
-        console.log(response);
-
-        router.push({ name: 'dashboard' });
-    });
+    const {data} = await ProductRepository.post(form.value);
+    console.log(data);
+    await router.push({name: 'dashboard'});
 }
 
 onUnmounted(() => productStore.resetProductResource());
@@ -35,7 +33,7 @@ onUnmounted(() => productStore.resetProductResource());
         </div>
         <div>
             <label for="price">Price</label>
-            <input id="price" v-model="form.price" type="number" min="0">
+            <input id="price" v-model="form.price" type="number" min="0" step=".01">
         </div>
         <div>
             <label for="password">Stock</label>

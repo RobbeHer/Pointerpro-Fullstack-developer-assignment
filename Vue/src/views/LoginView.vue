@@ -1,11 +1,12 @@
 <script setup>
 import {ref} from "vue";
-import axios from "axios";
-import {useUserStore} from "@/stores/user";
 import {useRouter} from "vue-router";
+import {useUserStore} from "@/stores/user";
+import RepositoryFactory from "@/repositories/RepositoryFactory";
 
-const userStore = useUserStore();
 const router = useRouter();
+const userStore = useUserStore();
+const UserRepository = RepositoryFactory.get('user');
 
 const form = ref({
     email: null,
@@ -13,17 +14,11 @@ const form = ref({
 });
 
 async function onLogin() {
-    await axios.get("/sanctum/csrf-cookie");
-    await axios.post("/login", {
-        email: form.value.email,
-        password: form.value.password
-    });
+    await UserRepository.login(form.value);
+    const {data} = await UserRepository.get();
+    userStore.setUser(data);
 
-    axios.get("/api/user").then((response) => {
-        userStore.setUser(response.data);
-
-        router.push({ name: 'dashboard' });
-    });
+    await router.push({name: 'dashboard'});
 }
 </script>
 

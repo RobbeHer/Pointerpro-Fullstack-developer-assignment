@@ -1,32 +1,27 @@
 <script setup>
-import axios from "axios";
-import {useProductStore} from "@/stores/product";
-import {useRoute, useRouter} from "vue-router";
 import {computed, onUnmounted} from "vue";
+import {useRoute, useRouter} from "vue-router";
+import {useProductStore} from "@/stores/product";
+import RepositoryFactory from "@/repositories/RepositoryFactory";
 
-const productStore = useProductStore();
 const route = useRoute();
 const router = useRouter();
+const productStore = useProductStore();
+const ProductRepository = RepositoryFactory.getAdmin('products');
 
 const form = computed(() => productStore.getProductResource?.data);
 
-function getProduct() {
-    axios.get(`/api/admin/products/${ route.params.id }`).then((response) => {
-        console.log(response.data);
-
-        productStore.setProductResource(response.data);
-    });
+async function getProduct() {
+    const {data} = await ProductRepository.getById(route.params.id);
+    console.log(data);
+    productStore.setProductResource(data);
 }
 getProduct();
 
 async function onSave() {
-    await axios.get("/sanctum/csrf-cookie");
-    axios.patch(
-        `/api/admin/products/${ route.params.id }`, productStore.getProductResource.data).then((response) => {
-        console.log(response);
-
-        router.push({ name: 'dashboard' });
-    });
+    const {data} = await ProductRepository.patch(productStore.getProductResource.data);
+    console.log(data);
+    await router.push({name: 'dashboard'});
 }
 
 onUnmounted(() => productStore.resetProductResource());

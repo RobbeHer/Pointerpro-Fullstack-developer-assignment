@@ -1,30 +1,20 @@
 <script setup>
-import axios from "axios";
 import {useProductStore} from "@/stores/product";
-import {useRouter} from "vue-router";
+import RepositoryFactory from "@/repositories/RepositoryFactory";
 
 const productStore = useProductStore();
-const router = useRouter();
+const ProductRepository = RepositoryFactory.getAdmin('products');
 
-function getProducts(url) {
-    if (!url) return;
-
-    axios.get(url).then((response) => {
-        console.log(response.data);
-        productStore.setProductCollection(response.data);
-    });
+async function getProducts(url = null) {
+    const {data} = await ProductRepository.get(url);
+    console.log(data);
+    productStore.setProductCollection(data);
 }
-getProducts("/api/admin/products");
-
-function onEditProduct(id) {
-    router.push({ name: 'dashboard_products_edit', params: { id } });
-}
+getProducts();
 
 async function onDeleteProduct(id) {
-    await axios.get("/sanctum/csrf-cookie");
-    axios.delete("/api/admin/products/" + id).then((response) => {
-        console.log(response);
-    });
+    const {data} = await ProductRepository.delete(id);
+    console.log(data);
 }
 </script>
 
@@ -35,7 +25,7 @@ async function onDeleteProduct(id) {
 
     <div v-for="product in productStore.getProductCollection?.data">
         {{ product.name }}
-        <button @click="onEditProduct(product.id)">Edit</button>
+        <RouterLink :to="{ name: 'dashboard_products_edit', params: { id: product.id } }">Edit</RouterLink>
         <button @click="onDeleteProduct(product.id)">Delete</button>
     </div>
 
