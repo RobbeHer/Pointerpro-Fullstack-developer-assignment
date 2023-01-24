@@ -27,10 +27,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::apiResources([
             'products' => AdminProductController::class,
         ]);
-        Route::apiResource('purchase', AdminPurchaseController::class, ['only' => ['index', 'show']]);
+        Route::apiResource('purchase', AdminPurchaseController::class, ['only' => ['index']]);
     });
 });
 
-Route::apiResource('products', ProductController::class, ['only' => ['index']]);
+Route::apiResource('products', ProductController::class, ['only' => ['index', 'show']]);
 
 Route::post('purchase', [PurchaseController::class, 'store']);
