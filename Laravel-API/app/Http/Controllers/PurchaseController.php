@@ -17,18 +17,45 @@ class PurchaseController extends Controller
      */
     public function store(StorePurchaseRequest $request)
     {
-        $purchase = Purchase::create($request->all());
+        $requestedItems = $request->get('items');
+        $requestedProductIds = array_map(fn($item) => $item['id'], $requestedItems);
+        $requestedProducts = Product::whereIn('id', $requestedProductIds)->get();
+        $warnings = [];
 
-        foreach ($request->get('items') as $item)
+        foreach ($requestedProducts as $requestedProduct)
         {
-            $purchase->products()->attach([$item['id'] => [
-                'quantity' => $item['quantity']
-            ]]);
+            $index = array_search($requestedProduct->id, array_column($requestedItems, "id"));
+            $requestedItem = $requestedItems[$index];
+
+            if ($requestedProduct->stock >= $requestedItem['quantity']) {
+                $requestedProduct->stock -= $requestedItem['quantity'];
+            } else {
+                array_push($warnings, "There are only {$requestedProduct->stock} left in stock for product \"{$requestedProduct->name}\", {$requestedItem['quantity']} requested");
+            }
         }
 
-        return response()->json([
-            'message' => "Purchase created successfully!",
-            'purchase' => Purchase::with('products')->find($purchase->id),
-        ], 200);
+        if (count($warnings)) {
+            return response()->json([
+                'message' => "Purchase denied!",
+                'data' => $warnings,
+            ], 400);
+        } else {
+            $purchase = Purchase::create($request->all());
+
+            foreach ($requestedProducts as $requestedProduct) {
+                $requestedProduct->save();
+            }
+
+            foreach ($requestedItems as $requestedItem) {
+                $purchase->products()->attach([$requestedItem['id'] => [
+                    'quantity' => $requestedItem['quantity']
+                ]]);
+            }
+
+            return response()->json([
+                'message' => "Purchase created successfully!",
+                'purchase' => Purchase::with('products')->find($purchase->id),
+            ], 200);
+        }
     }
 }
