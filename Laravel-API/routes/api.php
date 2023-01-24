@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\PurchaseController as AdminPurchaseController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use Illuminate\Http\Request;
@@ -26,9 +27,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::apiResources([
             'products' => AdminProductController::class,
         ]);
+        Route::apiResource('purchase', AdminPurchaseController::class, ['only' => ['index', 'show']]);
     });
 });
 
-Route::apiResource('products', ProductController::class, ['only' => ['index', 'show']]);
+Route::apiResource('products', ProductController::class, ['only' => ['index']]);
 
 Route::post('purchase', [PurchaseController::class, 'store']);
