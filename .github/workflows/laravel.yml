@@ -12,11 +12,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Set working directory to Laravel project
-      working-directory: ./ Laravel-API
     - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
       with:
         php-version: '8.0'
+      working-directory: ./ Laravel-API
     - uses: actions/checkout@v3
     - name: Copy .env
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
