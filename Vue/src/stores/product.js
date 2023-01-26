@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 
+const defaultProductCollection = null
 const defaultProductResource = {
     id: null,
     name: null,
@@ -10,7 +11,7 @@ const defaultProductResource = {
 
 export const useProductStore = defineStore('product', {
     state: () => ({
-        productCollection: null,
+        productCollection: defaultProductCollection,
         productResource: defaultProductResource,
     }),
     getters: {
@@ -23,6 +24,9 @@ export const useProductStore = defineStore('product', {
         },
         setProductResource(productResource) {
             this.productResource = productResource
+        },
+        resetProductCollection() {
+            this.productCollection = defaultProductCollection
         },
         resetProductResource() {
             this.productResource = defaultProductResource

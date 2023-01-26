@@ -13,14 +13,12 @@ const form = computed(() => productStore.getProductResource?.data);
 
 async function getProduct() {
     const {data} = await ProductRepository.getById(route.params.id);
-    console.log(data);
     productStore.setProductResource(data);
 }
 getProduct();
 
 async function onSave() {
-    const {data} = await ProductRepository.patch(productStore.getProductResource.data);
-    console.log(data);
+    await ProductRepository.patch(productStore.getProductResource.data);
     await router.push({name: 'dashboard'});
 }
 

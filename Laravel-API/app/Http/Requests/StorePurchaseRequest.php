@@ -24,10 +24,10 @@ class StorePurchaseRequest extends FormRequest
     public function rules()
     {
         return [
-            "username" => "required",
-            'items' => 'required|array',
+            "username" => "required|max:60",
+            'items' => 'required|array|min:1',
             'items.*.id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required',
+            'items.*.quantity' => 'required|integer|min:1',
         ];
     }
 }

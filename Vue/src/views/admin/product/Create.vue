@@ -11,8 +11,7 @@ const ProductRepository = RepositoryFactory.getAdmin('products');
 const form = computed(() => productStore.getProductResource);
 
 async function onSave() {
-    const {data} = await ProductRepository.post(form.value);
-    console.log(data);
+    await ProductRepository.post(form.value);
     await router.push({name: 'dashboard'});
 }
 

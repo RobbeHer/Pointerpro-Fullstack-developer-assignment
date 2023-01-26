@@ -2,6 +2,7 @@
 import {useProductStore} from "@/stores/product";
 import {usePurchaseStore} from "@/stores/purchase";
 import RepositoryFactory from "@/repositories/RepositoryFactory";
+import {onUnmounted} from "vue";
 
 const productStore = useProductStore();
 const purchaseStore = usePurchaseStore();
@@ -10,22 +11,21 @@ const PurchaseRepository = RepositoryFactory.getAdmin('purchase');
 
 async function getProducts(url = null) {
     const {data} = await ProductRepository.get(url);
-    console.log(data);
     productStore.setProductCollection(data);
 }
 getProducts();
 
-async function onDeleteProduct(id) {
-    const {data} = await ProductRepository.delete(id);
-    console.log(data);
+function onDeleteProduct(id) {
+    ProductRepository.delete(id);
 }
 
 async function getPurchases(url = null) {
     const {data} = await PurchaseRepository.get(url);
-    console.log(data);
     purchaseStore.setPurchaseCollection(data);
 }
 getPurchases();
+
+onUnmounted(() => productStore.resetProductCollection());
 </script>
 
 <template>

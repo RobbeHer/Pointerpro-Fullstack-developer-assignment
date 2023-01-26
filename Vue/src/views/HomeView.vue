@@ -3,6 +3,7 @@ import {useCartStore} from "@/stores/cart";
 import {useProductStore} from "@/stores/product";
 import RepositoryFactory from "@/repositories/RepositoryFactory";
 import Cart from "@/components/Cart.vue";
+import {onUnmounted} from "vue";
 
 const cartStore = useCartStore();
 const productStore = useProductStore();
@@ -10,7 +11,6 @@ const ProductRepository = RepositoryFactory.get('products');
 
 async function getProducts(url = null) {
     const {data} = await ProductRepository.get(url);
-    console.log(data);
     productStore.setProductCollection(data);
 }
 getProducts();
@@ -18,6 +18,8 @@ getProducts();
 function addProductToCart(product) {
     cartStore.addItem(product);
 }
+
+onUnmounted(() => productStore.resetProductCollection());
 </script>
 
 <template>
