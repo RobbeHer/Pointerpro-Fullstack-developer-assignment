@@ -8,7 +8,7 @@ axios.interceptors.response.use(
     function (response) {
         console.log("axios intercept response:");
         console.log(response.data);
-        return response;
+        return response.data;
     },
     function (error) {
         console.log("axios intercept error:");
@@ -18,5 +18,5 @@ axios.interceptors.response.use(
         const errorStore = useErrorStore();
         errorStore.addError(error.response);
 
-        return Promise.reject(error);
+        return Promise.reject(error.response.data);
     })

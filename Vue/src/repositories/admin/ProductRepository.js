@@ -10,10 +10,10 @@ export default {
         return axios.get(`${resource}/${id}`);
     },
     post(product) {
-        return axios.post(`${resource}`, product);
+        return axios.post(`${resource}`, product).catch(error => error);
     },
     patch(product) {
-        return axios.patch(`${resource}/${product.id}`, product);
+        return axios.patch(`${resource}/${product.id}`, product).catch(error => error);
     },
     delete(id) {
         return axios.delete(`${resource}/${id}`);

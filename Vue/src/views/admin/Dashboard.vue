@@ -10,7 +10,7 @@ const ProductRepository = RepositoryFactory.getAdmin('products');
 const PurchaseRepository = RepositoryFactory.getAdmin('purchase');
 
 async function getProducts(url = null) {
-    const {data} = await ProductRepository.get(url);
+    const data = await ProductRepository.get(url);
     productStore.setProductCollection(data);
 }
 getProducts();
@@ -20,7 +20,7 @@ function onDeleteProduct(id) {
 }
 
 async function getPurchases(url = null) {
-    const {data} = await PurchaseRepository.get(url);
+    const data = await PurchaseRepository.get(url);
     purchaseStore.setPurchaseCollection(data);
 }
 getPurchases();

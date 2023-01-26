@@ -3,43 +3,29 @@ import {useRouter} from "vue-router";
 import {computed, onUnmounted} from "vue";
 import {useProductStore} from "@/stores/product";
 import RepositoryFactory from "@/repositories/RepositoryFactory";
+import Form from "@/components/admin/product/Form.vue";
 
 const router = useRouter();
 const productStore = useProductStore();
 const ProductRepository = RepositoryFactory.getAdmin('products');
 
-const form = computed(() => productStore.getProductResource);
+const product = computed(() => productStore.getProductResource);
+const formErrors = computed(() => productStore.getFormErrors);
 
 async function onSave() {
-    await ProductRepository.post(form.value);
-    await router.push({name: 'dashboard'});
+    const data = await ProductRepository.post(product.value);
+    if (data.errors) productStore.setFormErrors(data.errors);
+    else await router.push({name: 'dashboard'});
 }
 
-onUnmounted(() => productStore.resetProductResource());
+onUnmounted(() => {
+    productStore.resetProductResource();
+    productStore.resetFormErrors();
+});
 </script>
 
 <template>
     <h1>Product create</h1>
 
-    <form v-if="form" @submit.prevent="onSave">
-        <div>
-            <label for="name">Name</label>
-            <input id="name" v-model="form.name" type="text">
-        </div>
-        <div>
-            <label for="description">Description</label>
-            <textarea id="description" v-model="form.description"></textarea>
-        </div>
-        <div>
-            <label for="price">Price</label>
-            <input id="price" v-model="form.price" type="number" min="0" step=".01">
-        </div>
-        <div>
-            <label for="password">Stock</label>
-            <input id="stock" v-model="form.stock" type="number" min="0">
-        </div>
-        <div>
-            <button>Save</button>
-        </div>
-    </form>
+    <Form :product="product" :formErrors="formErrors" @onSave="onSave"/>
 </template>

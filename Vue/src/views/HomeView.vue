@@ -10,7 +10,7 @@ const productStore = useProductStore();
 const ProductRepository = RepositoryFactory.get('products');
 
 async function getProducts(url = null) {
-    const {data} = await ProductRepository.get(url);
+    const data = await ProductRepository.get(url);
     productStore.setProductCollection(data);
 }
 getProducts();

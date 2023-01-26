@@ -11,7 +11,7 @@ const ProductRepository = RepositoryFactory.get('products');
 const product = computed(() => productStore.getProductResource?.data);
 
 async function getProduct() {
-    const {data} = await ProductRepository.getById(route.params.id);
+    const data = await ProductRepository.getById(route.params.id);
     productStore.setProductResource(data);
 }
 getProduct();

@@ -15,7 +15,7 @@ const form = ref({
 
 async function onLogin() {
     await UserRepository.login(form.value);
-    const {data} = await UserRepository.get();
+    const data = await UserRepository.get();
     userStore.setUser(data);
 
     await router.push({name: 'dashboard'});
