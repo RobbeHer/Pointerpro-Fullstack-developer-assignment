@@ -10,7 +10,9 @@ class Purchase extends Model
     use HasFactory;
 
     protected $fillable = [
-        'username',
+        'name',
+        'email',
+        'address',
     ];
 
     public function products()

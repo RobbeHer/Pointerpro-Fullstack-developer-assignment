@@ -29,15 +29,16 @@ class PurchaseController extends Controller
 
             if ($requestedProduct->stock >= $requestedItem['quantity']) {
                 $requestedProduct->stock -= $requestedItem['quantity'];
+                $requestedItems[$index]['price'] = $requestedProduct->price;
             } else {
-                array_push($warnings, "There are only {$requestedProduct->stock} left in stock for product \"{$requestedProduct->name}\", {$requestedItem['quantity']} requested");
+                $warnings['products'][$requestedProduct->id] = "There are only {$requestedProduct->stock} left in stock for product \"{$requestedProduct->name}\", {$requestedItem['quantity']} requested";
             }
         }
 
         if (count($warnings)) {
             return response()->json([
                 'message' => "Purchase denied!",
-                'data' => $warnings,
+                'errors' => $warnings,
             ], 400);
         } else {
             $purchase = Purchase::create($request->all());
@@ -48,7 +49,8 @@ class PurchaseController extends Controller
 
             foreach ($requestedItems as $requestedItem) {
                 $purchase->products()->attach([$requestedItem['id'] => [
-                    'quantity' => $requestedItem['quantity']
+                    'quantity' => $requestedItem['quantity'],
+                    'price' => $requestedItem['price'],
                 ]]);
             }
 

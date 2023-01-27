@@ -24,7 +24,9 @@ class StorePurchaseRequest extends FormRequest
     public function rules()
     {
         return [
-            "username" => "required|max:60",
+            'name' => 'required|max:60',
+            'email' => 'required|email|max:120',
+            'address' => 'required|max:250',
             'items' => 'required|array|min:1',
             'items.*.id' => 'required|exists:products,id',
             'items.*.quantity' => 'required|integer|min:1',

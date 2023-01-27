@@ -2,19 +2,24 @@ import { defineStore } from 'pinia'
 
 const defaultPurchaseResource = {
     id: null,
-    username: null,
-    products: [],
+    name: null,
+    email: null,
+    address: null,
+    items: [],
     createdAt: null,
 }
+const defaultFormErrors = {}
 
 export const usePurchaseStore = defineStore('purchase', {
     state: () => ({
         purchaseCollection: null,
         purchaseResource: defaultPurchaseResource,
+        formErrors: defaultFormErrors,
     }),
     getters: {
         getPurchaseCollection: (state) => state.purchaseCollection,
         getPurchaseResource: (state) => state.purchaseResource,
+        getFormErrors: (state) => state.formErrors,
     },
     actions: {
         setPurchaseCollection(purchaseCollection) {
@@ -23,8 +28,14 @@ export const usePurchaseStore = defineStore('purchase', {
         setPurchaseResource(purchaseResource) {
             this.purchaseResource = purchaseResource
         },
+        setFormErrors(errors) {
+            this.formErrors = errors
+        },
         resetPurchaseResource() {
             this.purchaseResource = defaultPurchaseResource
         },
+        resetFormErrors() {
+            this.formErrors = defaultFormErrors
+        }
     }
 })
