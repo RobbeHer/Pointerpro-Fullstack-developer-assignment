@@ -31,34 +31,93 @@ onUnmounted(() => productStore.resetProductCollection());
 <template>
     <h1>Dashboard</h1>
 
-    <RouterLink :to="{ name: 'dashboard_products_create' }">Create</RouterLink>
+    <section>
+        <h2>Products</h2>
 
-    <div v-for="product in productStore.getProductCollection?.data">
-        {{ product.name }}
-        <RouterLink :to="{ name: 'dashboard_products_edit', params: { id: product.id } }">Edit</RouterLink>
-        <button @click="onDeleteProduct(product.id)">Delete</button>
-    </div>
+        <RouterLink :to="{ name: 'dashboard_products_create' }">Create new product</RouterLink>
 
-    <button
-        v-for="link in productStore.getProductCollection?.meta.links"
-        @click="getProducts(link.url)"
-    >
-        {{ link.label }}
-    </button>
+        <table>
+            <tr>
+                <th>id</th>
+                <th>Product name</th>
+                <th>Stock</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+            <tr v-for="product in productStore.getProductCollection?.data">
+                <td>{{ product.id }}</td>
+                <td>
+                    <RouterLink :to="{ name: 'dashboard_products_edit', params: { id: product.id } }">
+                        {{ product.name }}
+                    </RouterLink>
+                </td>
+                <td>{{ product.stock}}</td>
+                <td>€{{ product.price }}</td>
+                <td>
+                    <RouterLink :to="{ name: 'dashboard_products_edit', params: { id: product.id } }">Edit</RouterLink>
+                    <button @click="onDeleteProduct(product.id)">Delete</button>
+                </td>
+            </tr>
+        </table>
 
-    <h1>Purchases</h1>
+        <button
+            v-for="link in productStore.getProductCollection?.meta.links"
+            @click="getProducts(link.url)"
+        >
+            {{ link.label }}
+        </button>
+    </section>
 
-    <div v-for="purchase in purchaseStore.getPurchaseCollection?.data">
-        {{ purchase.username }}
-        <div v-for="product in purchase.products">
-            {{ product.pivot.quantity }} x {{ product.name }}
-        </div>
-    </div>
+    <section>
+        <h3>Purchases</h3>
 
-    <button
-        v-for="link in purchaseStore.getPurchaseCollection?.meta.links"
-        @click="getPurchases(link.url)"
-    >
-        {{ link.label }}
-    </button>
+        <table>
+            <tr>
+                <th>id</th>
+                <th>name</th>
+                <th>date</th>
+            </tr>
+            <template v-for="purchase in purchaseStore.getPurchaseCollection?.data">
+                <tr>
+                    <td>{{ purchase.id }}</td>
+                    <td>{{ purchase.name }}</td>
+                    <td>{{ purchase.created_at }}</td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <details>
+                            <summary>details</summary>
+                            <div>Client info</div>
+                            <div>Email: {{ purchase.email }}</div>
+                            <div>Address: {{ purchase.address }}</div>
+                            <div>Items</div>
+                            <table>
+                                <tr>
+                                    <th>Product name</th>
+                                    <th>Quantity</th>
+                                    <th>Price (when sold)</th>
+                                </tr>
+                                <tr v-for="product in purchase.products">
+                                    <td>
+                                        <RouterLink :to="{ name: 'dashboard_products_edit', params: { id: product.id } }">
+                                            {{ product.name }}
+                                        </RouterLink>
+                                    </td>
+                                    <td>{{ product.pivot.quantity}}</td>
+                                    <td>€{{ product.price }}</td>
+                                </tr>
+                            </table>
+                        </details>
+                    </td>
+                </tr>
+            </template>
+        </table>
+
+        <button
+            v-for="link in purchaseStore.getPurchaseCollection?.meta.links"
+            @click="getPurchases(link.url)"
+        >
+            {{ link.label }}
+        </button>
+    </section>
 </template>

@@ -23,13 +23,15 @@ async function onLogin() {
 </script>
 
 <template>
+    <h1>Login</h1>
+
     <form @submit.prevent="onLogin">
         <div>
-            <label for="email">Email</label>
+            <div><label for="email">Email</label></div>
             <input v-model="form.email" type="email">
         </div>
         <div>
-            <label for="password">Password</label>
+            <div><label for="password">Password</label></div>
             <input v-model="form.password" type="password">
         </div>
         <div>

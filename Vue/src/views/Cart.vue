@@ -1,11 +1,13 @@
 <script setup>
+import {useRouter} from "vue-router";
 import {computed, onUnmounted} from "vue";
 import {useCartStore} from "@/stores/cart";
 import {usePurchaseStore} from "@/stores/purchase";
 import RepositoryFactory from "@/repositories/RepositoryFactory";
-import Cart from "@/components/Cart.vue";
-import PurchaseForm from '@/components/purchase/Form.vue';
+import ItemList from "@/components/cart/ItemList.vue";
+import PurchaseForm from '@/components/cart/purchase/Form.vue';
 
+const router = useRouter();
 const cartStore = useCartStore();
 const purchaseStore = usePurchaseStore();
 const cartRepository = RepositoryFactory.get('cart');
@@ -24,7 +26,14 @@ getProducts();
 
 async function makePurchase() {
     let data = await PurchaseRepository.post(purchaseDetails.value);
-    if (data.errors || data.warnings || data.notFound) purchaseStore.setFormErrors(data);
+    if (data.errors || data.warnings || data.notFound) {
+        purchaseStore.setFormErrors(data);
+    } else {
+        await purchaseStore.resetPurchaseResource();
+        await purchaseStore.resetFormErrors();
+        await cartStore.resetItems();
+        await router.push({name: 'home'});
+    }
 }
 
 onUnmounted(() => {
@@ -42,7 +51,7 @@ onUnmounted(() => {
         {{ productError }}
     </div>
 
-    <Cart/>
+    <ItemList/>
 
     <template v-if="cartStore.getItems.length">
         <PurchaseForm :purchaseDetails="purchaseDetails" :formErrors="formErrors"/>
