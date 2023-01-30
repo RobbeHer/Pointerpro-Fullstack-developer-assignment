@@ -28,7 +28,7 @@ class StorePurchaseRequest extends FormRequest
             'email' => 'required|email|max:120',
             'address' => 'required|max:250',
             'items' => 'required|array|min:1',
-            'items.*.id' => 'required|exists:products,id',
+            'items.*.id' => 'required|integer',
             'items.*.quantity' => 'required|integer|min:1',
         ];
     }

@@ -17,6 +17,7 @@ async function onLogout() {
 <template>
     <nav>
         <RouterLink :to="{ name: 'home' }">Home</RouterLink>
+        <RouterLink :to="{ name: 'cart' }">Cart</RouterLink>
 
 
         <span v-if="userStore.getUser">

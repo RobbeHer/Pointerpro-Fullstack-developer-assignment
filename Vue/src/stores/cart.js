@@ -18,7 +18,7 @@ export const useCartStore = defineStore('cart', {
             }))
             return totalPrice;
         },
-        getItemIdsAndQuantities: (state) =>  state.items.map(item => ({ id: item.product.id, quantity: item.quantity }))
+        getItemIdsAndQuantities: (state) =>  state.items.map(item => ({ id: item.product.id, quantity: item.quantity })),
     },
     actions: {
         addItem(product, quantity = 1) {

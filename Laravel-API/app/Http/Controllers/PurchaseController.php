@@ -17,28 +17,36 @@ class PurchaseController extends Controller
      */
     public function store(StorePurchaseRequest $request)
     {
+        $items = [];
         $requestedItems = $request->get('items');
         $requestedProductIds = array_map(fn($item) => $item['id'], $requestedItems);
         $requestedProducts = Product::whereIn('id', $requestedProductIds)->get();
         $warnings = [];
+        $notFound = [];
 
-        foreach ($requestedProducts as $requestedProduct)
+        foreach ($requestedItems as $requestedItem)
         {
-            $index = array_search($requestedProduct->id, array_column($requestedItems, "id"));
-            $requestedItem = $requestedItems[$index];
+             $requestedProduct = $requestedProducts->firstWhere('id', '==', $requestedItem['id']);
+
+            if (!$requestedProduct) {
+                $notFound[$requestedItem['id']] = "Product with id {$requestedItem['id']} was not found";
+                continue;
+            }
 
             if ($requestedProduct->stock >= $requestedItem['quantity']) {
                 $requestedProduct->stock -= $requestedItem['quantity'];
-                $requestedItems[$index]['price'] = $requestedProduct->price;
+                $requestedItem['price'] = $requestedProduct->price;
+                $items[] = $requestedItem;
             } else {
-                $warnings['products'][$requestedProduct->id] = "There are only {$requestedProduct->stock} left in stock for product \"{$requestedProduct->name}\", {$requestedItem['quantity']} requested";
+                $warnings[$requestedProduct->id] = "There are only {$requestedProduct->stock} left in stock for product \"{$requestedProduct->name}\", {$requestedItem['quantity']} requested";
             }
         }
 
-        if (count($warnings)) {
+        if (count($warnings) || count($notFound)) {
             return response()->json([
                 'message' => "Purchase denied!",
-                'errors' => $warnings,
+                'warnings' => $warnings,
+                'notFound'=> $notFound,
             ], 400);
         } else {
             $purchase = Purchase::create($request->all());
@@ -47,10 +55,10 @@ class PurchaseController extends Controller
                 $requestedProduct->save();
             }
 
-            foreach ($requestedItems as $requestedItem) {
-                $purchase->products()->attach([$requestedItem['id'] => [
-                    'quantity' => $requestedItem['quantity'],
-                    'price' => $requestedItem['price'],
+            foreach ($items as $item) {
+                $purchase->products()->attach([$item['id'] => [
+                    'quantity' => $item['quantity'],
+                    'price' => $item['price'],
                 ]]);
             }
 

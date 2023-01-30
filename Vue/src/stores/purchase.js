@@ -8,7 +8,11 @@ const defaultPurchaseResource = {
     items: [],
     createdAt: null,
 }
-const defaultFormErrors = {}
+const defaultFormErrors = {
+    errors: [],
+    warnings: [],
+    notFound: [],
+}
 
 export const usePurchaseStore = defineStore('purchase', {
     state: () => ({
@@ -29,7 +33,7 @@ export const usePurchaseStore = defineStore('purchase', {
             this.purchaseResource = purchaseResource
         },
         setFormErrors(errors) {
-            this.formErrors = errors
+            this.formErrors = {...defaultFormErrors, ...errors}
         },
         resetPurchaseResource() {
             this.purchaseResource = defaultPurchaseResource
