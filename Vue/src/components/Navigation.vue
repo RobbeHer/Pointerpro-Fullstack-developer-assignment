@@ -16,11 +16,13 @@ async function onLogout() {
 
 <template>
     <nav>
-        <RouterLink :to="{ name: 'home' }">Home</RouterLink>
-        <RouterLink :to="{ name: 'cart' }">Cart</RouterLink>
+        <span class="nav-group">
+            <RouterLink :to="{ name: 'home' }">Home</RouterLink>
+            <RouterLink :to="{ name: 'cart' }">Cart</RouterLink>
+        </span>
 
 
-        <span v-if="userStore.getUser">
+        <span v-if="userStore.getUser" class="nav-group">
             <RouterLink :to="{ name: 'dashboard' }">Dashboard</RouterLink>
             {{ userStore.getUser.name }}
             <button @click="onLogout">Logout</button>
@@ -28,3 +30,15 @@ async function onLogout() {
         <RouterLink v-else :to="{ name: 'login' }">Login</RouterLink>
     </nav>
 </template>
+
+<style>
+nav{
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 0;
+}
+.nav-group {
+    display: flex;
+    gap: 1rem;
+}
+</style>

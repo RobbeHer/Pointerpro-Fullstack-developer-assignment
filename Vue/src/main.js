@@ -5,6 +5,9 @@ import App from './App.vue'
 import router from './router'
 
 import './axios'
+import './assets/global.css'
+import './assets/table.css'
+import './assets/form.css'
 
 const app = createApp(App)
 const pinia = createPinia()

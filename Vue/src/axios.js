@@ -1,5 +1,5 @@
 import axios from "axios"
-import {useErrorStore} from "@/stores/error";
+import {useNotificationStore} from "@/stores/notification";
 
 axios.defaults.withCredentials = true
 axios.defaults.baseURL = "http://localhost:8000"
@@ -15,8 +15,8 @@ axios.interceptors.response.use(
         console.log(error.response.status);
         console.log(error.response.data);
 
-        const errorStore = useErrorStore();
-        errorStore.addError(error.response);
+        const notificationStore = useNotificationStore();
+        notificationStore.addNotification(error.response.data.message);
 
         return Promise.reject(error.response.data);
     })

@@ -1,0 +1,19 @@
+table {
+    border-collapse: collapse;
+}
+
+tbody tr:nth-child(even),
+tr.even-group {
+    background-color: lightsteelblue;
+}
+
+.alnright { text-align: right; }
+
+table .purchase-details .content {
+    padding: 1rem;
+}
+
+table .purchase-details .content table th,
+table .purchase-details .content table td {
+    border: 1px solid black;
+}

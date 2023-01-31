@@ -2,12 +2,14 @@
 import {computed, onUnmounted} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {useProductStore} from "@/stores/product";
+import {useNotificationStore} from "@/stores/notification";
 import RepositoryFactory from "@/repositories/RepositoryFactory";
 import Form from "@/components/admin/product/Form.vue";
 
 const route = useRoute();
 const router = useRouter();
 const productStore = useProductStore();
+const notificationStore = useNotificationStore();
 const ProductRepository = RepositoryFactory.getAdmin('products');
 
 const product = computed(() => productStore.getProductResource);
@@ -22,7 +24,10 @@ getProduct();
 async function onSave() {
     const data = await ProductRepository.patch(product.value);
     if (data.errors) productStore.setFormErrors(data.errors);
-    else await router.push({name: 'dashboard'});
+    else {
+        await notificationStore.addNotification(data.message, 'success');
+        await router.push({name: 'dashboard'});
+    }
 }
 
 onUnmounted(() => {

@@ -1,12 +1,12 @@
 <script setup>
 import {RouterView} from 'vue-router'
 import Navigation from "@/components/Navigation.vue";
-import Error from "@/components/Error.vue";
+import Notification from "@/components/Notification.vue";
 </script>
 
 <template>
     <Navigation/>
-    <Error/>
+    <Notification/>
 
     <RouterView/>
 </template>

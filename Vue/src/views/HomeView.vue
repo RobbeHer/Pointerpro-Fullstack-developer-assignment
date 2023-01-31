@@ -31,33 +31,35 @@ onUnmounted(() => productStore.resetProductCollection());
         <table>
             <tr>
                 <th>Product name</th>
-                <th>Price</th>
                 <th>Stock</th>
+                <th>Price</th>
                 <th>Action</th>
             </tr>
-            <tr v-for="product in productStore.getProductCollection?.data">
-                <td>
-                    <RouterLink :to="{ name: 'product_details', params: { id: product.id } }">
-                        {{ product.name }}
-                    </RouterLink>
-                </td>
-                <td>€{{ product.price }}</td>
-                <td>{{ product.stock}}</td>
-                <td>
-                    <button @click="addProductToCart(product)">
-                        Add to cart
-                    </button>
-                </td>
-            </tr>
+            <tbody>
+                <tr v-for="product in productStore.getProductCollection?.data">
+                    <td>
+                        <RouterLink :to="{ name: 'product_details', params: { id: product.id } }">
+                            {{ product.name }}
+                        </RouterLink>
+                    </td>
+                    <td>{{ product.stock}}</td>
+                    <td class="alnright">€{{ product.price }}</td>
+                    <td>
+                        <button @click="addProductToCart(product)">
+                            Add to cart
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
         </table>
     </section>
 
     <button
         v-for="link in productStore.getProductCollection?.meta.links"
         @click="getProducts(link.url)"
-    >
-        {{ link.label }}
-    </button>
+        class="mt-4"
+        v-html="link.label"
+    />
 
     <section>
         <h2>Cart overview</h2>

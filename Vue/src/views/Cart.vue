@@ -3,6 +3,7 @@ import {useRouter} from "vue-router";
 import {computed, onUnmounted} from "vue";
 import {useCartStore} from "@/stores/cart";
 import {usePurchaseStore} from "@/stores/purchase";
+import {useNotificationStore} from "@/stores/notification";
 import RepositoryFactory from "@/repositories/RepositoryFactory";
 import ItemList from "@/components/cart/ItemList.vue";
 import PurchaseForm from '@/components/cart/purchase/Form.vue';
@@ -10,6 +11,7 @@ import PurchaseForm from '@/components/cart/purchase/Form.vue';
 const router = useRouter();
 const cartStore = useCartStore();
 const purchaseStore = usePurchaseStore();
+const notificationStore = useNotificationStore();
 const cartRepository = RepositoryFactory.get('cart');
 const PurchaseRepository = RepositoryFactory.get('purchase');
 
@@ -29,6 +31,7 @@ async function makePurchase() {
     if (data.errors || data.warnings || data.notFound) {
         purchaseStore.setFormErrors(data);
     } else {
+        await notificationStore.addNotification(data.message, 'success');
         await purchaseStore.resetPurchaseResource();
         await purchaseStore.resetFormErrors();
         await cartStore.resetItems();
@@ -44,18 +47,18 @@ onUnmounted(() => {
 <template>
     <h1>Cart</h1>
 
-    <div v-for="productError in formErrors.notFound">
+    <div v-for="productError in formErrors.notFound" class="notification error-notification">
         {{ productError }}
     </div>
-    <div v-for="productError in formErrors.warnings">
+    <div v-for="productError in formErrors.warnings" class="notification error-notification">
         {{ productError }}
     </div>
 
     <ItemList/>
 
     <template v-if="cartStore.getItems.length">
-        <PurchaseForm :purchaseDetails="purchaseDetails" :formErrors="formErrors"/>
+        <PurchaseForm :purchaseDetails="purchaseDetails" :formErrors="formErrors" class="mt-4"/>
 
-        <button @click="makePurchase()">Make purchase</button>
+        <button @click="makePurchase()" class="mt-4">Make purchase</button>
     </template>
 </template>

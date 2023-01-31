@@ -1,0 +1,8 @@
+label:after {
+    margin-left: .25rem;
+    content: "*"
+}
+
+.form-error {
+    color: red;
+}

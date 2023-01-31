@@ -1,0 +1,20 @@
+.bold {
+    font-weight: bold;
+}
+
+.mt-4 {
+    margin-top: 1rem;
+}
+
+.notification{
+    padding: .5rem 1rem;
+    margin-bottom: 0.25rem;
+}
+.success-notification {
+    border: 2px solid green;
+    background-color: lightgreen;
+}
+.error-notification {
+    border: 2px solid red;
+    background-color: lightcoral;
+}

@@ -19,33 +19,34 @@ function addProductToCart(product) {
         <table>
             <tr>
                 <th>Product name</th>
-                <th>Price</th>
                 <th>Quantity</th>
+                <th>Price</th>
                 <th>Actions</th>
             </tr>
-            <tr v-for="item in cartStore.getItems">
-                <td>
-                    <template v-if="purchaseStore.formErrors.notFound[item.product.id]">
-                        NOT FOUND - {{ item.product.name }}
-                    </template>
-                    <template v-else>
-                        <RouterLink :to="{ name: 'product_details', params: { id: item.product.id } }">
-                            {{ item.product.name }}
-                        </RouterLink>
-                    </template>
-                </td>
-                <td>€{{ item.product.price }}</td>
-                <td>{{ item.quantity }}</td>
-                <td>
-                    <button @click="addProductToCart(product)">
-                        Add to cart
-                    </button>
-                    <button @click="removeProductFromCart(item.product)">Remove from cart</button>
-                </td>
-            </tr>
+            <tbody>
+                <tr v-for="item in cartStore.getItems">
+                    <td>
+                        <template v-if="purchaseStore.formErrors.notFound[item.product.id]">
+                            NOT FOUND - {{ item.product.name }}
+                        </template>
+                        <template v-else>
+                            <RouterLink :to="{ name: 'product_details', params: { id: item.product.id } }">
+                                {{ item.product.name }}
+                            </RouterLink>
+                        </template>
+                    </td>
+                    <td>{{ item.quantity }}</td>
+                    <td class="alnright">€{{ item.product.price }}</td>
+                    <td>
+                        <button @click="addProductToCart(product)">
+                            Add to cart
+                        </button>
+                        <button @click="removeProductFromCart(item.product)">Remove from cart</button>
+                    </td>
+                </tr>
+            </tbody>
         </table>
-
-        <div>Total: €{{ cartStore.getTotalPrice }}</div>
+        <div class="mt-4">Total: <span class="bold">€{{ cartStore.getTotalPrice }}</span></div>
     </div>
     <div v-else>
         Cart is empty
