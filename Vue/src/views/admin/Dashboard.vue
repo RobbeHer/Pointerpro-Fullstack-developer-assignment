@@ -38,15 +38,19 @@ onUnmounted(() => productStore.resetProductCollection());
 
         <RouterLink :to="{ name: 'dashboard_products_create' }">Create new product +</RouterLink>
 
-        <table class="mt-4">
-            <tr>
-                <th>id</th>
-                <th>Product name</th>
-                <th>Stock</th>
-                <th>Price</th>
-                <th>Actions</th>
-            </tr>
-            <tbody>
+        <div v-if="!productStore.getProductCollection?.data.length" class="mt-4">
+            No products found
+        </div>
+        <template v-else>
+            <table class="mt-4">
+                <tr>
+                    <th>id</th>
+                    <th>Product name</th>
+                    <th>Stock</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
+                <tbody>
                 <tr v-for="product in productStore.getProductCollection?.data">
                     <td>{{ product.id }}</td>
                     <td>
@@ -61,70 +65,76 @@ onUnmounted(() => productStore.resetProductCollection());
                         <button @click="onDeleteProduct(product.id)">Delete</button>
                     </td>
                 </tr>
-            </tbody>
-        </table>
+                </tbody>
+            </table>
 
-        <button
-            v-for="link in productStore.getProductCollection?.meta.links"
-            @click="getProducts(link.url)"
-            class="mt-4"
-            v-html="link.label"
-        />
+            <button
+                v-for="link in productStore.getProductCollection?.meta.links"
+                @click="getProducts(link.url)"
+                class="mt-4"
+                v-html="link.label"
+            />
+        </template>
     </section>
 
     <section>
         <h3>Purchases</h3>
 
-        <table>
-            <tr>
-                <th>id</th>
-                <th>name</th>
-                <th>date</th>
-            </tr>
-            <template v-for="(purchase, rowIndex) in purchaseStore.getPurchaseCollection?.data">
-                <tr :class="{'even-group': rowIndex%2}">
-                    <td>{{ purchase.id }}</td>
-                    <td>{{ purchase.name }}</td>
-                    <td>{{ new Date(purchase.created_at).toLocaleString() }}</td>
+        <template v-if="!purchaseStore.getPurchaseCollection?.data.length">
+            No purchases found
+        </template>
+        <template v-else>
+            <table>
+                <tr>
+                    <th>id</th>
+                    <th>name</th>
+                    <th>date</th>
                 </tr>
-                <tr :class="{'even-group': rowIndex%2}">
-                    <td colspan="3">
-                        <details class="purchase-details">
-                            <summary>details</summary>
-                            <div class="content">
-                                <div class="bold">Client info</div>
-                                <div>Email: {{ purchase.email }}</div>
-                                <div>Address: {{ purchase.address }}</div>
-                                <div class="bold mt-4">Items</div>
-                                <table>
-                                    <tr>
-                                        <th>Product name</th>
-                                        <th>Quantity</th>
-                                        <th>Price (when sold)</th>
-                                    </tr>
-                                    <tr v-for="product in purchase.products">
-                                        <td>
-                                            <RouterLink
-                                                :to="{ name: 'dashboard_products_edit', params: { id: product.id } }">
-                                                {{ product.name }}
-                                            </RouterLink>
-                                        </td>
-                                        <td class="alnright">{{ product.pivot.quantity }}</td>
-                                        <td class="alnright">€{{ product.price }}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </details>
-                    </td>
-                </tr>
-            </template>
-        </table>
+                <template v-for="(purchase, rowIndex) in purchaseStore.getPurchaseCollection?.data">
+                    <tr :class="{'even-group': rowIndex%2}">
+                        <td>{{ purchase.id }}</td>
+                        <td>{{ purchase.name }}</td>
+                        <td>{{ new Date(purchase.created_at).toLocaleString() }}</td>
+                    </tr>
+                    <tr :class="{'even-group': rowIndex%2}">
+                        <td colspan="3">
+                            <details class="purchase-details">
+                                <summary>details</summary>
+                                <div class="content">
+                                    <div class="bold">Client info</div>
+                                    <div>Email: {{ purchase.email }}</div>
+                                    <div>Address: {{ purchase.address }}</div>
+                                    <div class="bold mt-4">Items</div>
+                                    <table>
+                                        <tr>
+                                            <th>Product name</th>
+                                            <th>Quantity</th>
+                                            <th>Price (when sold)</th>
+                                        </tr>
+                                        <tr v-for="product in purchase.products">
+                                            <td>
+                                                <RouterLink
+                                                    :to="{ name: 'dashboard_products_edit', params: { id: product.id } }">
+                                                    {{ product.name }}
+                                                </RouterLink>
+                                            </td>
+                                            <td class="alnright">{{ product.pivot.quantity }}</td>
+                                            <td class="alnright">€{{ product.price }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </details>
+                        </td>
+                    </tr>
+                </template>
+            </table>
 
-        <button
-            v-for="link in purchaseStore.getPurchaseCollection?.meta.links"
-            @click="getPurchases(link.url)"
-            class="mt-4"
-            v-html="link.label"
-        />
+            <button
+                v-for="link in purchaseStore.getPurchaseCollection?.meta.links"
+                @click="getPurchases(link.url)"
+                class="mt-4"
+                v-html="link.label"
+            />
+        </template>
     </section>
 </template>

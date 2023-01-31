@@ -28,14 +28,18 @@ onUnmounted(() => productStore.resetProductCollection());
     <section>
         <h2>Product list</h2>
 
-        <table>
-            <tr>
-                <th>Product name</th>
-                <th>Stock</th>
-                <th>Price</th>
-                <th>Action</th>
-            </tr>
-            <tbody>
+        <template v-if="!productStore.getProductCollection?.data.length">
+            No products found
+        </template>
+        <template v-else>
+            <table>
+                <tr>
+                    <th>Product name</th>
+                    <th>Stock</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+                <tbody>
                 <tr v-for="product in productStore.getProductCollection?.data">
                     <td>
                         <RouterLink :to="{ name: 'product_details', params: { id: product.id } }">
@@ -50,16 +54,17 @@ onUnmounted(() => productStore.resetProductCollection());
                         </button>
                     </td>
                 </tr>
-            </tbody>
-        </table>
-    </section>
+                </tbody>
+            </table>
 
-    <button
-        v-for="link in productStore.getProductCollection?.meta.links"
-        @click="getProducts(link.url)"
-        class="mt-4"
-        v-html="link.label"
-    />
+            <button
+                v-for="link in productStore.getProductCollection?.meta.links"
+                @click="getProducts(link.url)"
+                class="mt-4"
+                v-html="link.label"
+            />
+        </template>
+    </section>
 
     <section>
         <h2>Cart overview</h2>
