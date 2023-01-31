@@ -85,7 +85,7 @@ onUnmounted(() => productStore.resetProductCollection());
                 <tr :class="{'even-group': rowIndex%2}">
                     <td>{{ purchase.id }}</td>
                     <td>{{ purchase.name }}</td>
-                    <td>{{ purchase.created_at }}</td>
+                    <td>{{ new Date(purchase.created_at).toLocaleString() }}</td>
                 </tr>
                 <tr :class="{'even-group': rowIndex%2}">
                     <td colspan="3">
