@@ -1,10 +1,12 @@
 <script setup>
 import {useRoute} from "vue-router";
 import {computed, onUnmounted} from "vue";
+import {useCartStore} from "@/stores/cart";
 import {useProductStore} from "@/stores/product";
 import RepositoryFactory from "@/repositories/RepositoryFactory";
 
 const route = useRoute();
+const cartStore = useCartStore();
 const productStore = useProductStore();
 const ProductRepository = RepositoryFactory.get('products');
 
@@ -16,6 +18,10 @@ async function getProduct() {
 }
 getProduct();
 
+function addProductToCart(product) {
+    cartStore.addItem(product);
+}
+
 onUnmounted(() => productStore.resetProductResource());
 </script>
 
@@ -26,5 +32,9 @@ onUnmounted(() => productStore.resetProductResource());
         <h2>{{ product.name }}</h2>
         <div>€{{ product.price }} - {{ product.stock }} in stock</div>
         <p>{{ product.description }}</p>
+        <button @click="addProductToCart(product)">
+            Add to cart
+        </button>
+        <span v-if="cartStore.getCountOfItemInCart(product)"> -  {{ cartStore.getCountOfItemInCart(product) }} already in cart</span>
     </div>
 </template>

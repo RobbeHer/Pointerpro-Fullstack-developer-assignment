@@ -38,7 +38,7 @@ function addProductToCart(product) {
                     <td>{{ item.quantity }}</td>
                     <td class="alnright">€{{ item.product.price }}</td>
                     <td>
-                        <button @click="addProductToCart(product)">
+                        <button @click="addProductToCart(item.product)">
                             Add to cart
                         </button>
                         <button @click="removeProductFromCart(item.product)">Remove from cart</button>
